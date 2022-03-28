@@ -4,13 +4,14 @@ import mongoose from "mongoose"
 import { wordShema } from "../database/models/words"
 import { MongoDatabase } from "../database/mongoapi"
 import { Input } from "../game/controllers/input"
-
+import bodyParser from 'body-parser'
 
 const client = new MongoClient('mongodb+srv://Brutal:345124qe@test.rkta3.mongodb.net/five-letters?retryWrites=true&w=majority')
 const db = new MongoDatabase()
 const input = new Input()
 
 const app = express()
+app.use(bodyParser.json())
 
 async function start() {
     try {
@@ -21,13 +22,18 @@ async function start() {
     }
 
     app.get("/start", async (req, res) => {
-        const word = await input.getSplitWord()
+        const word = "trill"
+        // await input.getSplitWord()
+
 
         res.end(word)
     })
 
     app.post("/insert", (req, res) => {
-        input.insert(req.body.word)
+        const inWord = req.body.word
+
+        const output = input.insert(inWord)
+        res.end(output)
     })
 
     // app.post("/add", async (req, res) => {
