@@ -1,6 +1,7 @@
 import { MongoDatabase } from "../../database/mongoapi"
 import { Verifications } from "./verifications"
 import { Attempts } from "../attempts"
+import { errorMonitor } from "events"
 
 const db = new MongoDatabase()
 const verification = new Verifications()
@@ -12,8 +13,9 @@ export class Input {
     constructor() { }
 
     private _curWord: string = ""
-    private _splitWord: string[] = ["t", "r", "i", "l", "l"]
+    private _splitWord: string[] = []
     private _finWord: string = ""
+    private _isGameActive = true
 
     async getSplitWord() {
         this._curWord = await db.getRandomWord() as string
@@ -23,24 +25,31 @@ export class Input {
     }
 
     insert(word: string) {
-        const letters = word.split("")
-        let final: string[] = letters
-        // for (var i = 0; i < 5; i++) {
-        //     for (var j = 0; j < 5; j++) {
-        //         if (letters[i] === this._splitWord[j]) {
-        //             if (i === j) final[i] = String("!" + letters[i].toUpperCase() + "!")
-        //             else final[i] = String("." + letters[i].toUpperCase() + ".")
-        //         }
-        //     }
-        // } 
-        if (attempts.attemptsCounter() === true) {
-            verification.firstVerification(letters, this._splitWord, final)
-            verification.secondVerification(letters, this._splitWord, final)
-            this._finWord += `\n${final.concat().toString()}`
+        if (verification.wordValidator(word) === true) {
+            const letters = word.toLowerCase().split("")
+            let final: string[] = letters
+
+            if (this._isGameActive === true && attempts.attemptsCounter() === true) {
+                if (verification.checkIfWin(word, this._curWord) === true) {
+                    this._isGameActive = false
+                    verification.firstVerification(letters, this._splitWord, final)
+                    this._finWord += `\n${final.concat().join("").toString()}` + `\n` + `You win!`
+                    return this._finWord
+                } else {
+                    verification.firstVerification(letters, this._splitWord, final)
+                    verification.secondVerification(letters, this._splitWord, final)
+                    this._finWord += `\n${final.concat().join("").toString()}`
+                }
+            }
+            if (this._isGameActive === false) {
+                throw new Error("The game is ended")
+            }
+            if (attempts.attemptsCounter() === false) {
+                throw new Error("No more moves")
+            }
         }
 
         return this._finWord
     }
-
 }
 

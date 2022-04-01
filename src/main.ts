@@ -1,3 +1,4 @@
+require('dotenv').config()
 import express from "express"
 import { MongoClient } from 'mongodb'
 import mongoose from "mongoose"
@@ -6,7 +7,7 @@ import { MongoDatabase } from "../database/mongoapi"
 import { Input } from "../game/controllers/input"
 import bodyParser from 'body-parser'
 
-const client = new MongoClient('mongodb+srv://Brutal:345124qe@test.rkta3.mongodb.net/five-letters?retryWrites=true&w=majority')
+// const client = new MongoClient('mongodb+srv://Brutal:345124qe@test.rkta3.mongodb.net/five-letters?retryWrites=true&w=majority')
 const db = new MongoDatabase()
 const input = new Input()
 
@@ -15,30 +16,39 @@ app.use(bodyParser.json())
 
 async function start() {
     try {
-        await mongoose.connect('mongodb+srv://Brutal:345124qe@cluster0.dbmdq.mongodb.net/five-letters')
-        app.listen(3000, () => console.log("runnin"))
+        await mongoose.connect("mongodb+srv://Brutal:345124qe@cluster0.dbmdq.mongodb.net/five-letters")
+        app.listen(process.env.PORT || 3000, () => console.log("runnin"))
     } catch (e) {
         console.log(e)
     }
 
     app.get("/start", async (req, res) => {
-        const word = "trill"
-        // await input.getSplitWord()
-
-
-        res.end(word)
+        try {
+            const word = await input.getSplitWord()
+            res.end(word)
+        } catch (e) {
+            res.end(e)
+        }
     })
 
     app.post("/insert", (req, res) => {
-        const inWord = req.body.word
+        try {
+            const inWord = req.body.word
 
-        const output = input.insert(inWord)
-        res.end(output)
+            const output = input.insert(inWord)
+            res.end(output)
+        } catch (e: any) {
+            res.end(e.message)
+        }
+    })
+
+    app.get("/test", async (req, res) => {
+        var arr = [1, 2, 3]
+        res.end(arr.join(''))
     })
 
     // app.post("/add", async (req, res) => {
     //     fs.readFile('words.txt', 'utf8', (err, data) => {
-    //         if (err) {
     //             console.error(err)
     //             return
     //         }
