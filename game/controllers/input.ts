@@ -26,10 +26,11 @@ export class Input {
 
     insert(word: string) {
         if (verification.wordValidator(word) === true) {
+            attempts.addAttemptToCounter()
             const letters = word.toLowerCase().split("")
             let final: string[] = letters
 
-            if (this._isGameActive === true && attempts.attemptsCounter() === true) {
+            if (this._isGameActive === true && attempts.getCount() < 7) {
                 if (verification.checkIfWin(word, this._curWord) === true) {
                     this._isGameActive = false
                     verification.firstVerification(letters, this._splitWord, final)
@@ -38,13 +39,13 @@ export class Input {
                 } else {
                     verification.firstVerification(letters, this._splitWord, final)
                     verification.secondVerification(letters, this._splitWord, final)
-                    this._finWord += `\n${final.concat().join("").toString()}`
+                    attempts.getCount() === 6 ? this._finWord += `\n${final.concat().join("").toString()}` + `\n` + `You lose!` : this._finWord += `\n${final.concat().join("").toString()}`
                 }
             }
             if (this._isGameActive === false) {
                 throw new Error("The game is ended")
             }
-            if (attempts.attemptsCounter() === false) {
+            if (attempts.getCount() >= 7) {
                 throw new Error("No more moves")
             }
         }

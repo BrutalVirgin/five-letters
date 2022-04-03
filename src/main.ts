@@ -1,46 +1,38 @@
-require('dotenv').config()
+import dotenv from "dotenv"
 import express from "express"
 import { MongoClient } from 'mongodb'
 import mongoose from "mongoose"
 import { wordShema } from "../database/models/words"
 import { MongoDatabase } from "../database/mongoapi"
-import { Input } from "../game/controllers/input"
+// import { Input } from "../game/controllers/input"
 import bodyParser from 'body-parser'
+import { Controller } from "../controllers/controllers"
+const router = require("../routes/routes")
+dotenv.config()
 
 // const client = new MongoClient('mongodb+srv://Brutal:345124qe@test.rkta3.mongodb.net/five-letters?retryWrites=true&w=majority')
 const db = new MongoDatabase()
-const input = new Input()
+// const input = new Input()
+const controller = new Controller()
+// const router = new Router()
 
 const app = express()
 app.use(bodyParser.json())
 
 async function start() {
     try {
-        await mongoose.connect("mongodb+srv://Brutal:345124qe@cluster0.dbmdq.mongodb.net/five-letters")
-        app.listen(process.env.PORT || 3000, () => console.log("runnin"))
+        // "mongodb+srv://Brutal:345124qe@cluster0.dbmdq.mongodb.net/five-letters"
+        await mongoose.connect(process.env.DBURL as string)
+        app.listen(process.env.PORT, () => console.log(`runnin`))
     } catch (e) {
         console.log(e)
     }
 
-    app.get("/start", async (req, res) => {
-        try {
-            const word = await input.getSplitWord()
-            res.end(word)
-        } catch (e) {
-            res.end(e)
-        }
-    })
+    // app.get("/start", controller.start)
 
-    app.post("/insert", (req, res) => {
-        try {
-            const inWord = req.body.word
+    // app.post("/insert", controller.insert)
 
-            const output = input.insert(inWord)
-            res.end(output)
-        } catch (e: any) {
-            res.end(e.message)
-        }
-    })
+    app.use("/", router)
 
     app.get("/test", async (req, res) => {
         var arr = [1, 2, 3]
