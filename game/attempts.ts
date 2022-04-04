@@ -1,4 +1,3 @@
-
 export class Attempts {
 
     private _counter: number = 0

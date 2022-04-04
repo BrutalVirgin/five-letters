@@ -1,11 +1,8 @@
 import express from "express";
-import { Controller } from "../controllers/controllers";
+import { start, insert } from "../controllers/controllers"
 const router = express.Router();
-const controller = new Controller()
 
-class Router {
-    start = router.get("/start", controller.start)
-    insert = router.post("/insert", controller.insert)
-}
+router.get("/start", start)
+router.post("/insert", insert)
 
-export {router} 
+export { router }
