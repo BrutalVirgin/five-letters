@@ -17,11 +17,6 @@ async function start() {
     }
 
     app.use(router)
-
-    app.get("/test", async (req, res) => {
-        var arr = [1, 2, 3]
-        res.end(arr.join(''))
-    })
 }
 
 start()

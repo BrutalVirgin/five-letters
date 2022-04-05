@@ -1,16 +1,18 @@
 import { Input } from "../game/input"
+import { RequestHandler } from 'express';
+
 const input = new Input()
 
-const start = async (req: any, res: { end: (arg0: any) => void }) => {
+const start: RequestHandler = async (req, res) => {
     try {
-        const word = await input.getSplitWord()
-        res.end(word)
+        await input.getSplitWord()
+        res.end()
     } catch (e) {
         res.end(e)
     }
 }
 
-const insert = (req: { body: { word: any } }, res: { end: (arg0: string) => void }) => {
+const insert: RequestHandler = (req, res) => {
     try {
         const inWord = req.body.word
 
