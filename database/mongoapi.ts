@@ -21,7 +21,6 @@ class MongoDatabase {
             console.log(e)
         }
     }
-
 }
 
 export { MongoDatabase }

@@ -3,10 +3,14 @@ import express from "express"
 import mongoose from "mongoose"
 import bodyParser from 'body-parser'
 import { router } from "../routes/routes"
-dotenv.config()
+import { MongoDatabase } from "../database/mongoapi"
 
+dotenv.config()
+//345124qe
 const app = express()
 app.use(bodyParser.json())
+
+const db = new MongoDatabase()
 
 async function start() {
     try {

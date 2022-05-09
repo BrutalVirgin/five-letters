@@ -6,6 +6,7 @@ declare global {
             PORT?: string;
             PWD: string;
             DBURL: string;
+            JWT: string
         }
     }
 }

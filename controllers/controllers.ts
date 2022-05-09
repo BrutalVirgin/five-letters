@@ -1,5 +1,8 @@
 import { Input } from "../game/input"
 import { RequestHandler } from 'express';
+import { MongoDatabase } from "../database/mongoapi"
+
+const db = new MongoDatabase()
 
 const input = new Input()
 
@@ -22,4 +25,5 @@ const insert: RequestHandler = (req, res) => {
         res.end(e.message)
     }
 }
+
 export { start, insert }

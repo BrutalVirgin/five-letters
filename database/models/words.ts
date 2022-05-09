@@ -10,5 +10,5 @@ const word = new Schema({
         required: true
     }
 })
-const wordShema = model('Test', word)
+const wordShema = model('words', word)
 export { wordShema }
