@@ -1,4 +1,5 @@
 import { wordShema } from "../database/models/words"
+import { userShema } from "../database/models/users"
 
 class MongoDatabase {
 
@@ -17,6 +18,15 @@ class MongoDatabase {
             const findWord = await wordShema.findOne({ id: randomId }).exec()
             var word = String(findWord.word)
             return word
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async getUserByName(nickname: string) {
+        try {
+            const user = await userShema.findOne({ nickName: nickname }).exec()
+            return user
         } catch (e) {
             console.log(e)
         }
